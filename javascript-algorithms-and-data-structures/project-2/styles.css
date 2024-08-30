@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Alata&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body,
+html {
+    padding: 0;
+    margin: 0;
+    font-family: "New Amsterdam", sans-serif;
+    letter-spacing: 0.5ch;
+}
+
+body {
+    min-height: 100vh;
+}
+
+#main-container {
+    background: rgb(247, 198, 133);
+    min-height: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#container>h1 {
+    font-weight: bold;
+    width: 70%;
+    text-align: center;
+}
+
+#container {
+    background-color: rgb(243, 189, 119);
+    min-width: 400px;
+    margin: 0 50px 0 50px;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+#number {
+    height: 80px;
+    width: 90%;
+    font-size: 50px;
+    font-family: "Alata", sans-serif;
+    outline: none;
+    border: 10px solid rgb(187, 104, 9);
+    transition: 0.3s background;
+}
+
+#number:focus {
+    background-color: antiquewhite;
+}
+
+.btn {
+    height: 70px;
+    cursor: pointer;
+    border: 1px solid saddlebrown;
+    border-radius: 5px;
+    transition: 0.3 all;
+}
+
+#reset-btn {
+    width: 70px;
+    font-size: 18px;
+    background-color: rgb(247, 132, 26);
+}
+
+.btn:hover {
+    box-shadow: 0 0 5px black;
+}
+
+#convert-btn {
+    font-size: 20px;
+    font-family: "Alata", serif;
+    background-color: rgb(199, 39, 39);
+    color: azure;
+}
+
+#output {
+    margin-top: 35px;
+    font-size: 50px;
+    font-family: "Alata", serif;
+    font-weight: bold;
+    letter-spacing: 0.2rem;
+    margin-bottom: 10px;
+}
