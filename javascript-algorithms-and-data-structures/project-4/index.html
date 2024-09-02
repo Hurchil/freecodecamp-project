@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css" />
+    <title>Hurchil Web</title>
+</head>
+<body>
+    <div id="main-container">
+        <h1>Cash Register Project</h1>
+        <div id="container">
+            <div id="left-side">
+                <div id="total-payer">Total à Payer : <span class="valeur-contenue">$1.87</span></div>
+                <form id="form">
+                <input id="cash" type="number" placeholder="Entrer liquide" step=".01"/>
+                <button id="purchase-btn" type="submit">Valid</button>
+            </form>
+                <p id="change-due">Customer does not have enough money to purchase the item</p>
+            </div>
+            <div id="right-side">
+                <h4>Change in drawer</h4>
+                <ul id="list-contenu">
+                    <li> Pennies: <span class="valeur-contenue">$1.01</span> </li>
+                    <li> Nickels: <span class="valeur-contenue">$2.05</span> </li>
+                    <li> Dimes: <span class="valeur-contenue">$3.1</span> </li>
+                    <li> Quarters: <span class="valeur-contenue">$4.25</span> </li>
+                    <li> Ones: <span class="valeur-contenue">$90</span> </li>
+                    <li> Fives: <span class="valeur-contenue">$55</span> </li>
+                    <li> Tens: <span class="valeur-contenue">$20</span> </li>
+                    <li> Twenties: <span class="valeur-contenue">$60</span> </li>
+                    <li> Hundreds: <span class="valeur-contenue">$100</span> </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <p>Développé par Hurchil</p>
+    <script src="script.js"></script>
+</body>
+</html>
