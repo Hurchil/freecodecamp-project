@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alata&family=Righteous&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="https://img.icons8.com/color/48/000000/pokeball.png" type="image/png">
+    <title>Hurchil Pokedex</title>
+
+</head>
+
+<body>
+    <main id="main">
+        <form id="form">
+            <input type="text" id="search-input" placeholder="Entrer le nom ou l'ID du Pokemon..." required />
+            <button type="submit" id="search-button"><img src="https://telegra.ph/file/d8933d22a489c92e3acc1.png" alt="🔎"
+                    id="search-glass" /></button>
+        </form>
+        <div id="container">
+            <div id="img-container">
+                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/448.png"
+                    alt="lucario" id="sprite" />
+            </div>
+            <div id="pokemon-name-id"><span id="pokemon-name">LUCARIO</span><span id="pokemon-id">#448</span></div>
+            <div id="types">
+                <div class="type" style="background-color: #C22E28;">FIGHTING</div>
+                <div style="background-color: #B7B7CE;" class="type">STEEL</div>
+            </div>
+            <div id="stats-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Base</th>
+                            <th>Stats</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Weight</td>
+                            <td id="weight" class="value">540</td>
+                        </tr>
+                        <tr>
+                            <td>height</td>
+                            <td id="height" class="value">12</td>
+                        </tr>
+                        <tr>
+                            <td>HP</td>
+                            <td id="hp" class="value">70</td>
+                        </tr>
+                        <tr>
+                            <td>Attaque</td>
+                            <td id="attack" class="value">110</td>
+                        </tr>
+                        <tr>
+                            <td>Défense</td>
+                            <td id="defense" class="value">70</td>
+                        </tr>
+                        <tr>
+                            <td>Attaque Spécial</td>
+                            <td id="special-attack" class="value">115</td>
+                        </tr>
+                        <tr>
+                            <td>Défense Spécial</td>
+                            <td id="special-defense" class="value">70</td>
+                        </tr>
+                        <tr>
+                            <td>Vitesse</td>
+                            <td id="speed" class="value">90</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <p id="copyright">Développer par Hurchil</p>
+    </main>
+
+    <div id="loading"></div>
+    <script src="script.js"></script>
+</body>
+
+</html>
