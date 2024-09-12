@@ -12,7 +12,8 @@ async function DBConnect(){
     }
 
     catch(err){
-        console.error("Une erreur s'est produite !\n", err);
+        console.error("Une erreur s'est produite !\n", err.message);
+        process.exit(1);
     }
 }
 

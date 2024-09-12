@@ -25,6 +25,10 @@ const LIB = {
 
 fc.DBConnect()
 
+app.use((req, res, next) => {
+    console.log(`REQUETE\nURL: ${req.url}\nBODY: ${JSON.stringify(req.body)}\nQUERY: ${JSON.stringify(req.query)}\n\n`);
+    next();
+})
 
 app.post('/api/users', (req, res) => {
     const username = req.body.username;
@@ -41,128 +45,104 @@ app.post('/api/users', (req, res) => {
 
 })
 
-app.post('/api/users/:_id/exercises', (req, res) => {
+app.post('/api/users/:_id/exercises', async (req, res) => {
     const id = req.params._id;
-    const description = req.body.description;
-    const duration = req.body.duration;
-    const date = req.body.date;
-    
-    if(!description || !description.trim()){
-        res.json({error: "Description is required!"});
-        return;
-        
+    const { description, duration, date } = req.body; // Utilisation de la destructuration
+
+    if (!description || !description.trim()) {
+        return res.status(400).json({ error: "Description is required!" });
     }
 
-    if(!duration || !Number(duration)){
-        res.json({error: "Duration is Incorrect !"});
-        return;
+    if (!duration || isNaN(Number(duration)) || Number(duration) <= 0) {
+        return res.status(400).json({ error: "Duration must be a positive number!" });
     }
 
-    getUser(id, (err, data) => {
-        if(err){
-            res.json({error: "Incorrect ID !"});
-            return;
+    try {
+        const user = await fc.User.findById(id);
+        if (!user) {
+            return res.sendFile(__dirname + "/views/error.html");
         }
-        else if(data){
-            const exercice = new fc.Exercice({
-                userid: data._id,
-                duration: Number(duration),
-                description: description,
-                date: is_valid_date(date) ? new Date(date) : new Date()
-            })
-            exercice.save();
 
-            res.json({
-                _id: data._id,
-                username: data.username,
-                duration: exercice.duration,
-                description: exercice.description,
-                date: exercice.date.toDateString()
-            })
-        }
-        else{
-            res.json({error: "User not found !"});
-            return;
-        }
-    })
-    
+        const exercice = new fc.Exercice({
+            userid: user._id,
+            description: description.trim(),
+            duration: Number(duration),
+            date: is_valid_date(date) ? new Date(date) : new Date()
+        });
 
+        await exercice.save();
+
+        res.json({
+            _id: user._id,
+            username: user.username,
+            description: exercice.description,
+            duration: exercice.duration,
+            date: exercice.date.toDateString()
+        });
+    } catch (err) {
+        res.status(500).json({ error: 'Internal Server Error', message: err.message });
+    }
 });
 
-
-app.get('/api/users/:_id/logs', (req, res) => {
+app.get('/api/users/:_id/logs', async (req, res) => {
     const { from, to, limit } = req.query;
     const id = req.params._id;
-    let user = null;
 
-    getUser(id, (err, data) => {
-        if(err){
-            res.json({error: "Incorrect ID"})
-            console.error(err);
-            return;
+    try {
+        const user = await fc.User.findById(id);
+        if (!user) {
+            return res.sendFile(__dirname + "/views/error.html");
+            return res.json({ error: "User not found!" });
         }
-        user = data;
-    })
 
-    getExercice(id, (err, data) => {
-        if(err){
-            res.json({error: "Internal error !"});
-            console.error(err);
-            return;
+        let exercises = await fc.Exercice.find({ userid: id });
+
+        if (exercises.length === 0) {
+            return res.sendFile(__dirname + "/views/error.html");
+            return res.json({ error: "No exercises found!" });
         }
-        else if(data.length === 0){
-            res.json({error: "No exercises found !"});
-            return;
+
+        // Filtrage par date
+        if (from && is_valid_date(from)) {
+            const fromDate = new Date(from);
+            exercises = exercises.filter(ex => ex.date >= fromDate);
         }
-        else{
-            
-            let filterData = data;
 
-
-            if(from && is_valid_date(from)){
-                const from_Date = new Date(from);
-                filterData = filterData.filter(elt => elt.date >= from_Date);
-            }
-
-            if(to && is_valid_date(to)){
-                const to_Date = new Date(to);
-                filterData = filterData.filter(elt => elt.date <= to_Date);
-            }
-
-            if(limit && !isNaN(Number(limit))){
-                filterData = filterData.slice(0 , Number(limit));
-            }
-            
-
-            filterData = filterData.map(elt => {
-                return {
-                    description: elt.description,
-                    duration: elt.duration,
-                    date: elt.date.toDateString()
-                };
-            });
-            console.log(id);
-            res.json({
-                _id: user._id,
-                username: user.username,
-                count: filterData.length,
-                log: filterData
-            })
-
+        if (to && is_valid_date(to)) {
+            const toDate = new Date(to);
+            exercises = exercises.filter(ex => ex.date <= toDate);
         }
-    })
-    
 
-})
+        // Limitation du nombre d'exercices
+        if (limit && !isNaN(Number(limit))) {
+            exercises = exercises.slice(0, Number(limit));
+        }
 
-app.get('/api/users', (req, res) => {
+        const logs = exercises.map(ex => ({
+            description: ex.description,
+            duration: ex.duration,
+            date: ex.date.toDateString(),
+        }));
 
-    fc.User.find({}).then(users => {
-        res.send(users);
-        return;
-    })
-})
+        res.json({
+            _id: user._id,
+            username: user.username,
+            count: logs.length,
+            log: logs
+        });
+    } catch (err) {
+        res.status(500).json({ error: 'Internal Server Error', message: err.message });
+    }
+});
 
+app.get('/api/users', async (req, res) => {
+    try {
+        const users = await fc.User.find({});
+        res.json(users);
+    } catch (err) {
+        res.status(500).json({ error: 'Internal Server Error', message: err.message });
+    }
+});
 
 const getUser = (id, done) => {
     fc.User.findById(id)
@@ -177,14 +157,9 @@ const getExercice = (id, done) => {
 }
 
 const is_valid_date = (str) => {
-    if(!/^\d{4}-\d{2}-\d{2}$/.test(str)){
-        return false;
-    }
-    else if(new Date(str).toString() === 'Invalid Date'){
-        return false;
-    }
-    return true;
-}
+    const date = new Date(str);
+    return !isNaN(date.getTime());  // Retourne true si la date est valide
+};
 
 
 
